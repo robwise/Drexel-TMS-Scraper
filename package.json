@@ -1,17 +1,17 @@
 {
-  "name": "better-tms",
-  "version": "0.0.0",
-  "description": "A parser/scraper/API thing for Drexel's WebTMS",
-  "license": "WTFPL",
+  "name": "Drexel-TMS-Scraper",
+  "version": "0.0.1",
+  "description": "A fork of better-tms for the purpose of populating the Drexel MSIS Planner RoR app",
+  "license": "MIT",
   "main": "app.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ashaindlin/better-tms.git"
+    "url": "https://github.com/robwise/Drexel-TMS-Scraper"
   },
   "bugs": {
-    "url": "https://github.com/ashaindlin/better-tms/issues"
+    "url": "https://github.com/robwise/Drexel-TMS-Scraper/issues"
   },
-  "homepage": "https://github.com/ashaindlin/better-tms",
+  "homepage": "https://github.com/robwise/Drexel-TMS-Scraper",
   "dependencies": {
     "cheerio": "^0.17.0",
     "express": "^4.9.7",
