@@ -5,13 +5,13 @@ var url = require('./form').url;
 module.exports.list = function(req, res) {
     request(url, function(error, request, body) {
         $ = cheerio.load(body);
-        var children = $('select#term').children();
+        var select_options = $('select#term').children();
         var terms = {};
-        var value, data;
-        children.each(function(_, child) { // we don't need the index
-            value = child.attribs.value;
-            data = child.children[0].data;
-            terms[value] = data;
+
+        select_options.each(function(index, select_option) {
+            var value = select_option.attribs.value; // e.g., "7"
+            var pretty_name = select_option.val(); // e.g., "Spring Quarter 14-15"
+            terms[value] = pretty_name;
         });
         delete terms['0']; // remove 'Select a Term' default option
         res.set('Content-Type', 'application/json');
