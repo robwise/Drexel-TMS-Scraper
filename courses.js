@@ -56,6 +56,43 @@ module.exports.getCourses = function(req, res) {
                     i++;
                 }
             });
+            $(".even, .odd").each(function() {
+                var obj = {};
+                var j = 0;
+                $(this).find('td [valign=center]').each(function() {
+                    switch (j) {
+                        case 0:
+                            obj.subjectcode = $(this).text();
+                            break;
+                        case 1:
+                            obj.coursenumber = $(this).text();
+                            break;
+                        case 2:
+                            obj.instrtype = $(this).text();
+                            break;
+                        case 3:
+                            obj.section = $(this).text();
+                            break;
+                        case 4:
+                            obj.crn = $(this).text();
+                            break;
+                        case 5:
+                            obj.coursetitle = $(this).text();
+                            break;
+                        case 6:
+                            obj.instructor = $(this).text();
+                            break;
+                        default:
+                            break;
+                    }
+                    j++;
+                });
+                // Ignore non-course table entries
+                if(Object.keys(obj).length !== 0) {
+                    results[i] = obj;
+                    i++;
+                }
+            });
             res.set('Content-Type', 'application/json');
             res.send(results);
         });
