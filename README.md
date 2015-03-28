@@ -1,8 +1,8 @@
-# about
+# About
 
-A parser/scraper/API thing for Drexel's WebTMS
+This is a fork of [better-tms](https://github.com/ashaindlin/better-tms). It is intended to be used to feed the [Drexel-MSIS-Planner](https://github.com/robwise/drexel_msis_planner) Ruby on Rails application with course listing data.
 
-# getting started
+# Getting Started
 
 1. clone the repo
 2. run `npm install` to fetch the dependencies
@@ -10,7 +10,7 @@ A parser/scraper/API thing for Drexel's WebTMS
         your choice)
 4. start with `node app.js`
 
-# for users: api endpoints
+# For Users: API endpoints
 
 ## /terms
 
@@ -88,7 +88,7 @@ GET /courses?crn=13622&term=1
 }
 ```
 
-# for developers: code structure
+# For Developers: Code Structure
 
 - app.js: Main entry point to the application. Express routes are defined here,
   and the port on which to listen for requests is chosen.
