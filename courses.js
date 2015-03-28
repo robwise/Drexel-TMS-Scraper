@@ -25,39 +25,39 @@ module.exports.getCourses = function(req, res) {
                 $(this).find('td [valign=top]').each(function() {
                     switch (j) {
                         case 0:
-                            obj['subjectcode'] = $(this).text();
+                            obj.subjectcode = $(this).text();
                             break;
                         case 1:
-                            obj['coursenumber'] = $(this).text();
+                            obj.coursenumber = $(this).text();
                             break;
                         case 2:
-                            obj['instrtype'] = $(this).text();
+                            obj.instrtype = $(this).text();
                             break;
                         case 3:
-                            obj['section'] = $(this).text();
+                            obj.section = $(this).text();
                             break;
                         case 4:
-                            obj['crn'] = $(this).text();
+                            obj.crn = $(this).text();
                             break;
                         case 5:
-                            obj['coursetitle'] = $(this).text();
+                            obj.coursetitle = $(this).text();
                             break;
                         case 6:
-                            obj['instructor'] = $(this).text();
+                            obj.instructor = $(this).text();
                             break;
                         default:
                             break;
                     }
                     j++;
-                })
+                });
                 // Ignore non-course table entries
-                if(Object.keys(obj).length != 0) {
+                if(Object.keys(obj).length !== 0) {
                     results[i] = obj;
                     i++;
                 }
-            })
+            });
             res.set('Content-Type', 'application/json');
             res.send(results);
         });
     }
-}
+};

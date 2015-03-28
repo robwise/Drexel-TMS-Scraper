@@ -12,5 +12,5 @@ module.exports.buildForm = function(term, courseName, courseNumber, crn) {
             courseName: courseName,
             crseNumb: courseNumber,
             crn: crn
-    }
-}
+    };
+};
