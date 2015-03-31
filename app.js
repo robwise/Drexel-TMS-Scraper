@@ -1,12 +1,14 @@
 var express = require('express');
 var courses = require('./courses');
 var terms = require('./terms');
+var course = require('./course');
 
 var app = express();
 
 // Declare routes
 app.get('/terms', terms.list);
 app.get('/courses', courses.getCourses);
+app.get('/course', course.getCourse);
 
 // Start app
 var port = process.env.PORT || 5000;
