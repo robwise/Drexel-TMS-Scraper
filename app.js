@@ -8,7 +8,7 @@ var app = express();
 // Declare routes
 app.get('/terms', terms.list);
 app.get('/courses', courses.getCourses);
-app.get('/course', course.getCourse);
+app.get('/course/:number', course.getCourse);
 
 // Start app
 var port = process.env.PORT || 5000;
