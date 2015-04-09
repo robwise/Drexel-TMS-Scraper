@@ -15,6 +15,7 @@
   "dependencies": {
     "cheerio": "^0.17.0",
     "express": "^4.9.7",
-    "request": "^2.45.0"
+    "request": "^2.45.0",
+    "tough-cookie": "^0.12.1"
   }
 }
