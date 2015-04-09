@@ -1,24 +1,29 @@
 var request = require('request');
+request = request.defaults({jar: true}); // Cookies enabled (requires 'tough-cookie' to be installed)
 var cheerio = require('cheerio');
 var form = require('./form');
+var util = require('./util');
 
 module.exports.getCourses = getCourses;
-module.exports.buildCoursesFromSearch = buildCoursesFromSearch;
+module.exports.searchForCourses = searchForCourses;
 
 function getCourses(req, res) {
     if (sendErrorIfBadQuery(req, res)) {
         return;
     }
 
-    buildCoursesFromSearch(req.query.term,
+    searchForCourses(req.query.term,
                            req.query.name,
                            req.query.number,
                            req.query.crn,
                            function(courses){
-                            res.send(courses);
-                        });
+                               res.send(courses);
+                           }
+                          );
 }
 
+// Responds with an error if term and at least one other query attribute are not
+// present. Returns true if the query is bad. False means good to go.
 function sendErrorIfBadQuery(req, res) {
     var badQuery = false;
     if(!req.query.term) {
@@ -33,8 +38,9 @@ function sendErrorIfBadQuery(req, res) {
     return badQuery;
 }
 
-// Takes a function as last argument due to asynchronous call of request.post
-function buildCoursesFromSearch(term, name, number, crn, callbackFn) {
+// Fills search form and submits post request, parses results into course
+// objects, and passes these courses as an argument to the callback function
+function searchForCourses(term, name, number, crn, callbackFn) {
     var url = form.url;
     var formData = form.buildForm(term, name, number, crn);
     var courses = {};
@@ -44,65 +50,61 @@ function buildCoursesFromSearch(term, name, number, crn, callbackFn) {
         $ = cheerio.load(body);
         console.log("New request");
         $(".even, .odd").each(function() {
-            var course = parseCourseFromRow('[valign=top]', $(this));
-
-            // Ignore non-course table entries
-            if(Object.keys(course).length !== 0) {
-                courses[courseIndex] = course;
-                courseIndex++;
-            }
-        });
-        $(".even, .odd").each(function() {
-            var course = parseCourseFromRow('[valign=center]', $(this));
-
-            // Ignore non-course table entries
-            if(Object.keys(course).length !== 0) {
-                courses[courseIndex] = course;
-                courseIndex++;
-            }
+            parseCourse('[valign=top]', $(this), courses);
+            parseCourse('[valign=center]', $(this), courses);
         });
         callbackFn(courses); // Must go here or may be executed out of order
     });
 }
 
-// Creates a course object from the TD cells of a parent row
-function parseCourseFromRow(attribute, parentElement) {
+// Creates a course object from the TD cells of a parent row and adds to passed
+// courses array
+function parseCourse(attribute, parentElement, courses) {
+    var courseIndex = Object.keys(courses).length;
     var course = {};
     var resultAttributeIndex = 0;
     $(parentElement).find('td ' + attribute).each(function() {
         switch (resultAttributeIndex) {
             case 0:
-                course.department = getCourseAttributeFromTdEl($(this));
+                course.department = util.getTextFromEl($(this));
                 break;
             case 1:
-                course.level = getCourseAttributeFromTdEl($(this));
+                course.level = util.getTextFromEl($(this));
                 break;
             case 2:
-                course.instructorType = getCourseAttributeFromTdEl($(this));
+                course.instructionType = util.getTextFromEl($(this));
                 break;
             case 3:
-                course.section = getCourseAttributeFromTdEl($(this));
+                course.section = util.getTextFromEl($(this));
                 break;
             case 4:
-                course.crn = getCourseAttributeFromTdEl($(this));
+                course.crn = util.getTextFromEl($(this));
+                course.detailsURL = getCourseDetailsURLFromEl($(this));
                 break;
             case 5:
-                course.courseTitle = getCourseAttributeFromTdEl($(this));
+                course.title = util.getTextFromEl($(this));
                 break;
             case 6:
-                course.instructor = getCourseAttributeFromTdEl($(this));
+                course.instructor = util.getTextFromEl($(this));
                 break;
             default:
                 break;
         }
         resultAttributeIndex++;
     });
-    return course;
+    // Ignore non-course table entries
+    if(Object.keys(course).length !== 0) {
+        courses[courseIndex] = course;
+    }
 }
 
-function getCourseAttributeFromTdEl(tdEl) {
-    var courseAttribute = tdEl.text();
-    courseAttribute = courseAttribute.trim();
-    courseAttribute = courseAttribute.replace(/\s{2,}/g, ' '); // remove multiple spaces
-    return courseAttribute;
+// NOTE: this URL is only usable by the server since it is session-specific
+function getCourseDetailsURLFromEl(el) {
+    // The href value isn't a usable URL, so we must build it by extracting
+    // the query string and adding it on to the base URL
+    var href = $(el).find('a').attr('href').toString();
+    var queryStringRegex = /\?component=.*/;
+    var queryString = queryStringRegex.exec(href)[0];
+
+    return form.url + queryString;
 }
