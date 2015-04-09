@@ -5,14 +5,14 @@ var form = require('./form');
 var util = require('./util');
 
 module.exports.getCourses = getCourses;
-module.exports.searchForCourses = searchForCourses;
+module.exports.buildCoursesFromSearch = buildCoursesFromSearch;
 
 function getCourses(req, res) {
     if (sendErrorIfBadQuery(req, res)) {
         return;
     }
 
-    searchForCourses(req.query.term,
+    buildCoursesFromSearch(req.query.term,
                            req.query.name,
                            req.query.number,
                            req.query.crn,
@@ -40,7 +40,7 @@ function sendErrorIfBadQuery(req, res) {
 
 // Fills search form and submits post request, parses results into course
 // objects, and passes these courses as an argument to the callback function
-function searchForCourses(term, name, number, crn, callbackFn) {
+function buildCoursesFromSearch(term, name, number, crn, callbackFn) {
     var url = form.url;
     var formData = form.buildForm(term, name, number, crn);
     var courses = {};

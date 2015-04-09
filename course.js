@@ -10,23 +10,30 @@ module.exports.getCourse = getCourse;
 
 function getCourse(req, res) {
     // Get all courses with the given course number
-    var term = 7;
     var number = req.params.number;
-    courses.searchForCourses(term, '', number, '', function(courses){
-        findInfoCourse(courses, function(matchingCourse) {
-            if (null === matchingCourse) {
-                res.status(404).json('Could not find INFO ' + number + '.');
-            } else {
-                addDetailsToCourse(matchingCourse, function(detailedMatchingCourse){
-                    res.json(detailedMatchingCourse);
-                });
-            }
+    buildDetailedInfoCourse(number, function(infoCourse) {
+        if (null === infoCourse) {
+            res.status(404).json('Could not find INFO ' + number + '.');
+        } else {
+            res.json(infoCourse);
+        }
+    });
+}
+
+function buildDetailedInfoCourse(courseNumber, callbackFn) {
+    // Get all courses with the given course number
+    var term = 7;
+    courses.buildCoursesFromSearch(term, '', courseNumber, '', function(courses){
+        retrieveInfoCourseFromCourses(courses, function(matchingCourse) {
+            addDetailsToCourse(matchingCourse, function(detailedMatchingCourse) {
+                callbackFn(detailedMatchingCourse);
+            });
         });
     });
 }
 
 // Find the first 'INFO' course from search results and send it as response
-function findInfoCourse(courses, callbackFn) {
+function retrieveInfoCourseFromCourses(courses, callbackFn) {
     var matchingCourse = null;
     var i = 0;
 
