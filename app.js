@@ -2,7 +2,6 @@ var express = require('express');
 var courses = require('./courses');
 var terms = require('./terms');
 var course = require('./course');
-var infoCourses = require('./info_courses');
 
 var app = express();
 
