@@ -12,6 +12,9 @@
     "url": "https://github.com/robwise/Drexel-TMS-Scraper/issues"
   },
   "homepage": "https://github.com/robwise/Drexel-TMS-Scraper",
+  "engines": {
+      "node": "0.12.x"
+    },
   "dependencies": {
     "cheerio": "^0.17.0",
     "express": "^4.9.7",
