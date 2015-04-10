@@ -10,7 +10,6 @@ var app = express();
 app.get('/terms', terms.list);
 app.get('/courses', courses.getCourses);
 app.get('/course/:number', course.getCourse);
-app.get('/infocourses', infoCourses.getAllInfoCourses);
 
 // Start app
 var port = process.env.PORT || 5000;
