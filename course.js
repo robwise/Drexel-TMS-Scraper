@@ -22,7 +22,7 @@ function getCourse(req, res) {
 }
 
 function buildDetailedInfoCourse(courseNumber, callbackFn) {
-    var term = 7;
+    var term = 3;
     courses.buildCoursesFromSearch(term, '', courseNumber, '', function(courses){
         retrieveInfoCourseFromCourses(courses, function(matchingCourse) {
             addDetailsToCourse(matchingCourse, function(detailedMatchingCourse) {
